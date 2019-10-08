@@ -27,23 +27,22 @@
       </div>
     </div>
 
-    <a href="/car">
+    <router-link to="/car">
       <div class="cart">
         <img src="../assets/images/cart.png" alt="">
         <div class="num">{{total}}</div>
       </div>
-    </a>
+    </router-link>
   </div>
 </template>
 
 <script>
-
+import {mapMutations,mapState} from 'vuex';
 import axios from 'axios';
 export default {
   name: 'home',
   data:function(){
     return {
-      goodInCart:[],
       currentIndex:0,
       navList:['价格升序↑','价格降序↓','销量升序↑','销量降序↓'],
       goodList:[]
@@ -52,7 +51,8 @@ export default {
   computed:{
     total:function() {
       return this.goodInCart.reduce(function(t,i){ return t+i.count },0);
-    }
+    },
+    ...mapState(['goodInCart'])
   },
   methods:{
     sort:function(index) {
@@ -75,34 +75,13 @@ export default {
         });
       }
     },
-    addToCart:function(good) {
-      var goodInCart = localStorage.getItem("goodInCart")? JSON.parse(localStorage.getItem("goodInCart")) : [];
-
-      var findGood = goodInCart.find(function(item){
-        return good.id == item.id
-      });
-
-      // console.log(findGood);
-
-      if(!findGood) {
-        good.count = 1; 
-        goodInCart.push(good);
-      }else {
-        findGood.count++; 
-      }
-
-      this.goodInCart = goodInCart;
-      // console.log(goodInCart);
-    
-      localStorage.setItem('goodInCart',JSON.stringify(goodInCart));
-    }
+    ...mapMutations(['addToCart'])
   },
   mounted:function() {
     axios.get("https://yantianfeng.com/api/goodList").then((res)=>{
       // console.log(res.data);
       this.goodList = res.data.goodList;
     });
-     this.goodInCart = localStorage.getItem("goodInCart")? JSON.parse(localStorage.getItem("goodInCart")) : [];
     
   }
 }

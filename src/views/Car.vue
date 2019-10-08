@@ -1,6 +1,6 @@
 <template>
   <div class="car">
-    <h3>购物车</h3>
+    <h3>购物车{{goodInCart.length}}</h3>
 
     <div class="car-items" v-if="goodInCart.length>0">
       <div class="item" v-for="(item,index) in goodInCart" :key="index">
@@ -33,13 +33,15 @@
   </div>
 </template>
 <script>
+import {mapState,mapMutations} from 'vuex';
 export default {
   data() {
     return {
-      goodInCart:[]
+      
     }
   },
   computed: {
+    ...mapState(['goodInCart']),
     total:function() {
       return this.goodInCart.reduce(function(t,good) {return t+good.count}, 0)
     },
@@ -48,27 +50,7 @@ export default {
     }
   },
   methods: {
-    sub:function(id) {
-      var findGood = this.goodInCart.find(function(good,index) {
-        return good.id == id;
-      })
-      if(findGood) {
-        if(findGood.count > 1) findGood.count--;
-      }
-       localStorage.setItem('goodInCart',JSON.stringify(this.goodInCart));
-    },
-    add:function(id) {
-      var findGood = this.goodInCart.find(function(good,index) {
-        return good.id == id;
-      })
-      if(findGood) {
-        if(findGood.count < 5) findGood.count++;
-      }
-       localStorage.setItem('goodInCart',JSON.stringify(this.goodInCart));
-    }
-  },
-  mounted:function() {
-    this.goodInCart = localStorage.getItem("goodInCart")? JSON.parse(localStorage.getItem("goodInCart")) : [];
+    ...mapMutations(['sub','add'])
   }
 }
 </script>

@@ -3,19 +3,16 @@
         <div class="confirm-main">
             <div class="address">
                 <h3>收货地址</h3>
-                <div class="address-item">
-                    <p>河南省-开封市-上帝之巅</p>
-                    <p>河南省-开封市-上帝之巅</p>
-                    <p>河南省-开封市-上帝之巅</p>
+                <div class="address-item" v-for="(address,index) in addressList" :key="address.id">
+                    <p @click="selectAddress(index)" :class="{active:currentAddress == index}">{{address.address}}</p>
                 </div>
             </div>
 
             <div class="method">
                 <h3>支付方式</h3>
-                <div class="address-item">
-                    <p><span>微信</span> <img src="../assets/images/微信.png" alt=""></p>
-                    <p><span>支付宝</span> <img src="../assets/images/支付宝认证.png" alt=""></p>
-                    <p><span>银联</span> <img src="../assets/images/支付平台-银联.png" alt=""></p>
+                <div class="address-item" v-for="(pay,index) in payList" :key="pay.id">
+                    <p @click="selectPay(index)" :class="{active: currentPay == index}"><span>{{pay.pay}}</span> <img :src="pay.icon" alt=""/></p>
+                    
                 </div>
             </div>
 
@@ -72,7 +69,9 @@
 export default {
     data() {
         return {
-            addresses:[
+            currentAddress:0,
+            currentPay:0,
+            addressList:[
                 {
                     "id":1,
                     "address":"河南省-开封市-上帝之巅"
@@ -85,7 +84,32 @@ export default {
                     "id":3,
                     "address":"河南省-开封市-密西西比"
                 }
+            ],
+            payList:[
+                {
+                    "id":11,
+                    "pay":"微信",
+                    "icon":require("../assets/images/微信.png")
+                },
+                {
+                    "id":12,
+                    "pay":"支付宝",
+                    "icon":require("../assets/images/支付宝认证.png")
+                },
+                {
+                    "id":13,
+                    "pay":"银联",
+                    "icon":require("../assets/images/支付平台-银联.png")
+                }
             ]
+        }
+    },
+    methods: {
+        selectAddress:function(index) {
+            this.currentAddress = index;
+        },
+        selectPay:function(index) {
+            this.currentPay = index;
         }
     },
 }
@@ -126,6 +150,12 @@ export default {
     margin-left: 4%;
     color:#333;
 }
+.confirm .confirm-main .address p.active,.method p.active{
+    background-size: 30px;
+    background-image: url('../assets/images/check.png');
+    background-position: right center;
+    background-repeat: no-repeat;
+}
 .confirm .confirm-main .method p span{
     display: block;
     float: left;
@@ -156,6 +186,7 @@ export default {
     margin-left: 4%;
     color:#333;
 }
+
 .confirm .confirm-main .list .list-item .pic{
     width:60px;
     height:60px;
